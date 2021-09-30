@@ -4,7 +4,8 @@ const _defaultRequestHeaders = "// Specify the request headers as a JS object, f
 "// headers({\n" +
 "//  'Auhtorization':'secret'\n" +
 "// })\n"+
-"headers({})\n"
+"//headers({})\n" +
+"//{}\n"
 
 const GraphQLQueryNode = Noodl.defineNode({
 	category: 'GraphQL',
@@ -43,13 +44,15 @@ const GraphQLQueryNode = Noodl.defineNode({
 	},
 	changed:{
 		RequestHeaders:function(value) {
+			/*
 			try {
 				this.requestHeaderFunc = new Function('headers', value);
 			}
 			catch(e) {
 				this.requestHeaderFunc = undefined;
 				this.sendWarning('grapgl-headers-warning','Error in headers script: ' +  e);
-			}  
+			} 
+			*/ 
 		}
 	},
 	signals: {
@@ -97,12 +100,8 @@ const GraphQLQueryNode = Noodl.defineNode({
 			xhr.setRequestHeader('Accept', 'application/json');
 
 			// Let's get the user specified headers
-			if(this.requestHeaderFunc) {
-				this.requestHeaderFunc(function(headers) {
-					for(var key in headers) {
-						xhr.setRequestHeader(key,headers[key])
-					}
-				})
+			for (var key in this.inputs.RequestHeaders) {
+				xhr.setRequestHeader(key,this.inputs.RequestHeaders[key]);
 			}
 
 			xhr.send(JSON.stringify(json));
